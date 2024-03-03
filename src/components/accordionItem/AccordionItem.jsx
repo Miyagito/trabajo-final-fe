@@ -1,21 +1,20 @@
 import React from "react";
 import { Button } from "../buttons/Button";
-import "./AccordionItem.css";
+import "./accordionItem.css";
 
 export const AccordionItem = ({
   itemId,
   title,
-  children,
+  productos,
   expanded,
   setExpanded,
+  addProductToCart,
 }) => {
   const isCurrentlyExpanded = expanded === itemId;
 
   const handleToggle = () => {
     setExpanded(isCurrentlyExpanded ? null : itemId);
   };
-
-  let buttonMsg = "Agregar a la cesta";
 
   return (
     <div className="accordion-item">
@@ -40,7 +39,7 @@ export const AccordionItem = ({
         aria-labelledby={`heading${itemId}`}
       >
         <div className="accordion-body">
-          {children.map((producto, index) => (
+          {productos.map((producto, index) => (
             <div key={index}>
               <section>
                 <p>{producto.descripcion}</p>
@@ -53,7 +52,12 @@ export const AccordionItem = ({
                   alt={producto.descripcion}
                   style={{ width: "100px" }}
                 />
-                <Button children={buttonMsg} className={"btn btn-primary"} />
+                <Button
+                  className="btn btn-primary"
+                  onClick={() => addProductToCart(producto)}
+                >
+                  Agregar a la cesta
+                </Button>
               </section>
             </div>
           ))}

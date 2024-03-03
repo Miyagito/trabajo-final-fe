@@ -1,32 +1,21 @@
-.accordion-body div {
+.shoppyCartItem {
+  padding: 2%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border: 0.5px solid grey;
   margin-bottom: -0.5px;
-  padding: 0 2%;
 }
 
-section {
-  flex-direction: column;
-}
-
-section p {
-  margin-bottom: 0;
-}
-
-section p:first-of-type {
-  font-weight: bold;
-}
-
-.accordion-body div img {
+.shoppyCartItem section img {
   margin-right: 10px;
+  height: auto;
   padding: 2% 0;
   transition: transform 0.3s ease;
   transform-origin: center center;
 }
 
-.accordion-body div section img:hover {
+.shoppyCartItem section img:hover {
   transform: scale(2.3);
   z-index: 10;
   position: relative;

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { AccordionItem } from "../accordionItem/AccordionItem";
 
-export const CategoryAccordion = ({ categories }) => {
+export const CategoryAccordion = ({ categories, addProductToCart }) => {
   const [expanded, setExpanded] = useState(null);
 
   return (
@@ -13,7 +13,8 @@ export const CategoryAccordion = ({ categories }) => {
           title={category.nombre}
           expanded={expanded}
           setExpanded={setExpanded}
-          children={category.productos}
+          productos={category.productos}
+          addProductToCart={addProductToCart}
         />
       ))}
     </div>
