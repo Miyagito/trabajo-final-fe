@@ -7,10 +7,10 @@ import { AdminForm } from "./components/adminForm/AdminForm";
 import "./app.css";
 
 function App() {
-  const showAdminForm = (isAdmin) => isAdmin;
   const [isAdmin, setIsAdmin] = useState(false);
   const [shoppyCartList, setShoppyCartList] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [catAndProdsList, setCatAndProdsList] = useState(mockedData);
 
   useEffect(() => {
     const newTotal = shoppyCartList.reduce((sum, product) => {
@@ -54,15 +54,53 @@ function App() {
 
   const toggleAdminMode = () => setIsAdmin(!isAdmin);
 
+  const addCategoria = (nuevaCategoria) => {
+    if (typeof nuevaCategoria === "string") {
+      // Si es una cadena simple, agregamos la categoría sin productos
+      setCatAndProdsList((prevState) => ({
+        ...prevState,
+        categorias: [
+          ...prevState.categorias,
+          { nombre: nuevaCategoria, productos: [] },
+        ],
+      }));
+    } else {
+      // Si es un objeto con productos, simplemente lo agregamos
+      setCatAndProdsList((prevState) => ({
+        ...prevState,
+        categorias: [...prevState.categorias, nuevaCategoria],
+      }));
+    }
+  };
+
+  const addProductoToCategoria = (categoria, nuevoProducto) => {
+    setCatAndProdsList((prevState) => {
+      const newCategorias = prevState.categorias.map((cat) => {
+        if (cat.nombre === categoria) {
+          return {
+            ...cat,
+            productos: [...cat.productos, nuevoProducto],
+          };
+        }
+        return cat;
+      });
+      return { ...prevState, categorias: newCategorias };
+    });
+  };
+
   return (
     <div className="main-container">
       <section className="left-section">
         <Header toggleAdminMode={toggleAdminMode} isAdmin={isAdmin} />
         {isAdmin ? (
-          <AdminForm />
+          <AdminForm
+            categorias={catAndProdsList.categorias.map((cat) => cat.nombre)}
+            addCategoria={addCategoria}
+            addProductoToCategoria={addProductoToCategoria}
+          />
         ) : (
           <CategoryAccordion
-            categories={mockedData.categorias}
+            categories={catAndProdsList.categorias}
             addProductToCart={addProductToCart}
           />
         )}

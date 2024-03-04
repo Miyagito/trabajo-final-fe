@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 
-export const AdminForm = ({ addCategoria, addProductoACategoria }) => {
-  const [categoria, setCategoria] = useState("");
+export const AdminForm = ({
+  addCategoria,
+  addProductoToCategoria,
+  categorias,
+}) => {
+  const [nombreCategoria, setNombreCategoria] = useState(""); // Cambiado a nombreCategoria
+  const [categoriaProducto, setCategoriaProducto] = useState(""); // Nuevo estado para la categoría del producto
   const [descripcion, setDescripcion] = useState("");
   const [precio, setPrecio] = useState("");
   const [stock, setStock] = useState("");
@@ -9,71 +14,91 @@ export const AdminForm = ({ addCategoria, addProductoACategoria }) => {
   const [imagenUrl, setImagenUrl] = useState("");
   const [error, setError] = useState("");
 
-  const validations = [
-    {
-      check: !categoria,
-      message: "Por favor, ingrese el nombre de la categoría.",
-    },
-    {
-      check: !descripcion,
-      message: "Por favor, ingrese una descripción para el producto.",
-    },
-    {
-      check: !precio,
-      message: "Por favor, ingrese un precio para el producto.",
-    },
-    {
-      check: isNaN(precio) || precio <= 0,
-      message: "El precio debe ser un número mayor a 0.",
-    },
-    {
-      check: !stock,
-      message: "Por favor, ingrese el stock del producto.",
-    },
-    {
-      check: isNaN(stock) || stock < 0,
-      message: "El stock debe ser un número no negativo.",
-    },
-    {
-      check: !codigo,
-      message: "Por favor, ingrese un código para el producto.",
-    },
-    {
-      check: !imagenUrl,
-      message: "Por favor, ingrese la URL de la imagen del producto.",
-    },
-  ];
-
-  const handleSubmitCategoria = (e) => {
-    e.preventDefault();
-    addCategoria(categoria);
-    // Limpiar campos y manejar errores...
-  };
-
-  const handleSubmitProducto = (e) => {
-    e.preventDefault();
-    // Construir el objeto producto con los datos del formulario
-    const nuevoProducto = { descripcion, precio, stock, codigo, imagenUrl };
-    addProductoACategoria(categoria, nuevoProducto);
-    // Limpiar campos y manejar errores...
-  };
-
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Resetear mensajes de error
     setError("");
 
-    // Validación utilizando el array de reglas
-    const failedValidation = validations.find((v) => v.check);
+    const isAddingProduct =
+      descripcion && precio && stock && codigo && imagenUrl;
 
-    if (failedValidation) {
-      setError(failedValidation.message);
-      return;
+    if (isAddingProduct) {
+      const failedValidation = validateProduct(); // Validar producto
+
+      if (failedValidation) {
+        setError(failedValidation);
+        return;
+      }
+
+      console.log("Adding product to category:", categoriaProducto); // Debugging
+
+      // Llamar a la función para agregar producto a la categoría
+      const nuevoProducto = { descripcion, precio, stock, codigo, imagenUrl };
+      addProductoToCategoria(categoriaProducto, nuevoProducto); // Cambiado a categoriaProducto
+
+      setDescripcion("");
+      setPrecio("");
+      setStock("");
+      setCodigo("");
+      setImagenUrl("");
+    } else {
+      const failedValidation = validateCategory(); // Validar categoría
+
+      if (failedValidation) {
+        setError(failedValidation);
+        return;
+      }
+
+      console.log("Adding new category:", nombreCategoria); // Debugging
+
+      // Llamar a la función para agregar categoría
+      addCategoria(nombreCategoria); // Cambiado a nombreCategoria
     }
 
-    // Si pasa todas las validaciones
-    console.log({ categoria, descripcion, precio, stock, codigo, imagenUrl });
-    // Procede con la lógica para manejar la creación del producto
+    // Limpiar campo de categoría
+    setNombreCategoria(""); // Cambiado a nombreCategoria
+  };
+
+  const validateCategory = () => {
+    if (!nombreCategoria) {
+      return "Por favor, ingrese el nombre de la categoría.";
+    }
+    return null;
+  };
+
+  const validateProduct = () => {
+    const validations = [
+      {
+        check: !descripcion,
+        message: "Por favor, ingrese una descripción para el producto.",
+      },
+      {
+        check: !precio,
+        message: "Por favor, ingrese un precio para el producto.",
+      },
+      {
+        check: isNaN(precio) || precio <= 0,
+        message: "El precio debe ser un número mayor a 0.",
+      },
+      {
+        check: !stock,
+        message: "Por favor, ingrese el stock del producto.",
+      },
+      {
+        check: isNaN(stock) || stock < 0,
+        message: "El stock debe ser un número no negativo.",
+      },
+      {
+        check: !codigo,
+        message: "Por favor, ingrese un código para el producto.",
+      },
+      {
+        check: !imagenUrl,
+        message: "Por favor, ingrese la URL de la imagen del producto.",
+      },
+    ];
+
+    const failedValidation = validations.find((v) => v.check);
+    return failedValidation ? failedValidation.message : null;
   };
 
   return (
@@ -88,8 +113,8 @@ export const AdminForm = ({ addCategoria, addProductoACategoria }) => {
         <input
           type="text"
           className="form-control"
-          value={categoria}
-          onChange={(e) => setCategoria(e.target.value)}
+          value={nombreCategoria} // Cambiado a nombreCategoria
+          onChange={(e) => setNombreCategoria(e.target.value)} // Cambiado a setNombreCategoria
           placeholder="Nombre de la categoría"
         />
         <button type="submit" className="btn btn-primary mt-2">
@@ -101,11 +126,15 @@ export const AdminForm = ({ addCategoria, addProductoACategoria }) => {
         <label className="form-label">Categoría del producto</label>
         <select
           className="form-select"
-          value={categoria}
-          onChange={(e) => setCategoria(e.target.value)}
+          value={categoriaProducto} // Cambiado a categoriaProducto
+          onChange={(e) => setCategoriaProducto(e.target.value)} // Cambiado a setCategoriaProducto
         >
-          <option value="Electrónica">Electrónica</option>
-          {/* ... otras opciones */}
+          <option value="">Seleccione una categoría</option>
+          {categorias.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
         </select>
       </div>
       <div className="mb-3">
