@@ -11,11 +11,10 @@ function App() {
   const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
-    // Calcular el precio total cada vez que shoppyCartList cambia.
     const newTotal = shoppyCartList.reduce((sum, product) => {
       return sum + product.precio * product.cantidad;
     }, 0);
-    setTotalPrice(Math.round(newTotal * 100) / 100); // Redondea a dos decimales
+    setTotalPrice(Math.round(newTotal * 100) / 100);
   }, [shoppyCartList]);
 
   const addProductToCart = (productToAdd) => {

@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../buttons/Button";
 import "./accordionItem.css";
+import { useRecoilState } from "recoil";
+import { productsStockAtom } from "../../states/stockAtoms";
 
 export const AccordionItem = ({
   itemId,
@@ -10,10 +12,21 @@ export const AccordionItem = ({
   setExpanded,
   addProductToCart,
 }) => {
-  const isCurrentlyExpanded = expanded === itemId;
+  const [productsStock, setProductsStock] = useRecoilState(productsStockAtom);
 
+  const isCurrentlyExpanded = expanded === itemId;
   const handleToggle = () => {
     setExpanded(isCurrentlyExpanded ? null : itemId);
+  };
+  const handleUpdateStock = (codigo, decreaseBy) => {
+    setProductsStock((prevStock) => {
+      const currentStock = prevStock[codigo] || 0;
+      return {
+        ...prevStock,
+        [codigo]:
+          currentStock - decreaseBy >= 0 ? currentStock - decreaseBy : 0,
+      };
+    });
   };
 
   return (
@@ -44,7 +57,8 @@ export const AccordionItem = ({
               <section>
                 <p>{producto.descripcion}</p>
                 <p>Precio: ${producto.precio}</p>
-                <p>Stock: {producto.stock}</p>
+                <p>Stock: {productsStock[producto.codigo]}</p>
+                <p>Código: {producto.codigo}</p>
               </section>
               <section>
                 <img
@@ -54,7 +68,11 @@ export const AccordionItem = ({
                 />
                 <Button
                   className="btn btn-primary"
-                  onClick={() => addProductToCart(producto)}
+                  onClick={() => {
+                    handleUpdateStock(producto.codigo, 1);
+                    addProductToCart(producto);
+                  }}
+                  disabled={productsStock[producto.codigo] <= 0}
                 >
                   Agregar a la cesta
                 </Button>
