@@ -3,10 +3,12 @@ import { Header } from "./components/header/Header";
 import mockedData from "./mockedData/mockedData.json";
 import { CategoryAccordion } from "./components/categoryAccordion/CategoryAccordion";
 import { ShoppingCart } from "./components/shoppingCart/ShoppingCart";
+import { AdminForm } from "./components/adminForm/AdminForm";
 import "./app.css";
 
 function App() {
   const showAdminForm = (isAdmin) => isAdmin;
+  const [isAdmin, setIsAdmin] = useState(false);
   const [shoppyCartList, setShoppyCartList] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
 
@@ -50,14 +52,20 @@ function App() {
     });
   };
 
+  const toggleAdminMode = () => setIsAdmin(!isAdmin);
+
   return (
     <div className="main-container">
       <section className="left-section">
-        <Header showAdminForm={showAdminForm} />
-        <CategoryAccordion
-          categories={mockedData.categorias}
-          addProductToCart={addProductToCart}
-        />
+        <Header toggleAdminMode={toggleAdminMode} isAdmin={isAdmin} />
+        {isAdmin ? (
+          <AdminForm />
+        ) : (
+          <CategoryAccordion
+            categories={mockedData.categorias}
+            addProductToCart={addProductToCart}
+          />
+        )}
       </section>
       <section className="right-section">
         <ShoppingCart
