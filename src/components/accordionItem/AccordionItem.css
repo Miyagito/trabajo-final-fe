@@ -31,3 +31,9 @@ section p:first-of-type {
   z-index: 10;
   position: relative;
 }
+
+.accordion-collapse {
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+  max-height: 0; /* Estado inicial colapsado */
+}

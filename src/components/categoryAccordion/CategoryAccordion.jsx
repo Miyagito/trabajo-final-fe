@@ -5,7 +5,7 @@ export const CategoryAccordion = ({ categories, addProductToCart }) => {
   const [expanded, setExpanded] = useState(null);
 
   return (
-    <div className="accordion" id="accordionExample">
+    <div className="accordion" id="categorias">
       {categories.map((category, index) => (
         <AccordionItem
           key={index}

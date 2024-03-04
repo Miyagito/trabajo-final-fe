@@ -16,8 +16,19 @@ export const AccordionItem = ({
 
   const isCurrentlyExpanded = expanded === itemId;
   const handleToggle = () => {
+    const content = document.getElementById(`collapse${itemId}`);
+    if (isCurrentlyExpanded) {
+      // Colapsar
+      content.style.maxHeight = "0";
+    } else {
+      // Expandir - Se necesita calcular después de que el navegador tenga la oportunidad de renderizar el cambio
+      requestAnimationFrame(() => {
+        content.style.maxHeight = content.scrollHeight + "px";
+      });
+    }
     setExpanded(isCurrentlyExpanded ? null : itemId);
   };
+
   const handleUpdateStock = (codigo, decreaseBy) => {
     setProductsStock((prevStock) => {
       const currentStock = prevStock[codigo] || 0;
@@ -50,6 +61,7 @@ export const AccordionItem = ({
           isCurrentlyExpanded ? "show" : ""
         }`}
         aria-labelledby={`heading${itemId}`}
+        data-parent="#categorias"
       >
         <div className="accordion-body">
           {productos.map((producto, index) => (
