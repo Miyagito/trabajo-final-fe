@@ -1,0 +1,13 @@
+.main-container {
+  display: flex;
+  margin: 2%;
+}
+
+.right-section {
+  padding: 0 2%;
+  width: 40%;
+}
+
+.left-section {
+  width: 60%;
+}
