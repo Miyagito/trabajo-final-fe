@@ -1,17 +1,19 @@
-// stockAtoms.js
-import { atom } from "recoil";
-import mockedData from "../mockedData/mockedData.json";
-
-// Crea un estado inicial para el stock basado en los productos
-const initialStockState = mockedData.categorias
-  .flatMap((categoria) =>
-    categoria.productos.map((producto) => ({
-      [producto.codigo]: producto.stock,
-    }))
-  )
-  .reduce((acc, val) => ({ ...acc, ...val }), {});
+import { atom, selector } from "recoil";
+import { catAndProdsListAtom } from "./catAndProdsListAtom";
 
 export const productsStockAtom = atom({
   key: "productsStock",
-  default: initialStockState,
+  default: selector({
+    key: "productsStockDefault",
+    get: ({ get }) => {
+      const catAndProdsList = get(catAndProdsListAtom);
+      return catAndProdsList.categorias
+        .flatMap((categoria) =>
+          categoria.productos.map((producto) => ({
+            [producto.codigo]: producto.stock,
+          }))
+        )
+        .reduce((acc, val) => ({ ...acc, ...val }), {});
+    },
+  }),
 });

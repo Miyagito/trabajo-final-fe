@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Button } from "../buttons/Button";
 import "./accordionItem.css";
 import { useRecoilState } from "recoil";
@@ -16,8 +16,17 @@ export const AccordionItem = ({
 
   const isCurrentlyExpanded = expanded === itemId;
   const handleToggle = () => {
+    const content = document.getElementById(`collapse${itemId}`);
+    if (isCurrentlyExpanded) {
+      content.style.maxHeight = "0";
+    } else {
+      requestAnimationFrame(() => {
+        content.style.maxHeight = content.scrollHeight + "px";
+      });
+    }
     setExpanded(isCurrentlyExpanded ? null : itemId);
   };
+
   const handleUpdateStock = (codigo, decreaseBy) => {
     setProductsStock((prevStock) => {
       const currentStock = prevStock[codigo] || 0;
@@ -28,7 +37,6 @@ export const AccordionItem = ({
       };
     });
   };
-
   return (
     <div className="accordion-item">
       <h2 className="accordion-header" id={`heading${itemId}`}>
@@ -50,6 +58,7 @@ export const AccordionItem = ({
           isCurrentlyExpanded ? "show" : ""
         }`}
         aria-labelledby={`heading${itemId}`}
+        data-parent="#categorias"
       >
         <div className="accordion-body">
           {productos.map((producto, index) => (
