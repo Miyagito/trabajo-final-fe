@@ -5,35 +5,30 @@ export const AdminForm = ({
   addProductoToCategoria,
   categorias,
 }) => {
-  const [nombreCategoria, setNombreCategoria] = useState(""); // Cambiado a nombreCategoria
-  const [categoriaProducto, setCategoriaProducto] = useState(""); // Nuevo estado para la categoría del producto
+  const [nombreCategoria, setNombreCategoria] = useState("");
+  const [categoriaProducto, setCategoriaProducto] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [precio, setPrecio] = useState("");
   const [stock, setStock] = useState("");
   const [codigo, setCodigo] = useState("");
-  const [imagenUrl, setImagenUrl] = useState("");
+  const [imagen, setImagenUrl] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
     setError("");
 
-    const isAddingProduct =
-      descripcion && precio && stock && codigo && imagenUrl;
+    const isAddingProduct = descripcion && precio && stock && codigo && imagen;
 
     if (isAddingProduct) {
-      const failedValidation = validateProduct(); // Validar producto
+      const failedValidation = validateProduct();
 
       if (failedValidation) {
         setError(failedValidation);
         return;
       }
-
-      console.log("Adding product to category:", categoriaProducto); // Debugging
-
-      // Llamar a la función para agregar producto a la categoría
-      const nuevoProducto = { descripcion, precio, stock, codigo, imagenUrl };
-      addProductoToCategoria(categoriaProducto, nuevoProducto); // Cambiado a categoriaProducto
+      const nuevoProducto = { descripcion, precio, stock, codigo, imagen };
+      addProductoToCategoria(categoriaProducto, nuevoProducto);
 
       setDescripcion("");
       setPrecio("");
@@ -41,21 +36,15 @@ export const AdminForm = ({
       setCodigo("");
       setImagenUrl("");
     } else {
-      const failedValidation = validateCategory(); // Validar categoría
+      const failedValidation = validateCategory();
 
       if (failedValidation) {
         setError(failedValidation);
         return;
       }
-
-      console.log("Adding new category:", nombreCategoria); // Debugging
-
-      // Llamar a la función para agregar categoría
-      addCategoria(nombreCategoria); // Cambiado a nombreCategoria
+      addCategoria(nombreCategoria);
     }
-
-    // Limpiar campo de categoría
-    setNombreCategoria(""); // Cambiado a nombreCategoria
+    setNombreCategoria("");
   };
 
   const validateCategory = () => {
@@ -92,7 +81,7 @@ export const AdminForm = ({
         message: "Por favor, ingrese un código para el producto.",
       },
       {
-        check: !imagenUrl,
+        check: !imagen,
         message: "Por favor, ingrese la URL de la imagen del producto.",
       },
     ];
@@ -113,8 +102,8 @@ export const AdminForm = ({
         <input
           type="text"
           className="form-control"
-          value={nombreCategoria} // Cambiado a nombreCategoria
-          onChange={(e) => setNombreCategoria(e.target.value)} // Cambiado a setNombreCategoria
+          value={nombreCategoria}
+          onChange={(e) => setNombreCategoria(e.target.value)}
           placeholder="Nombre de la categoría"
         />
         <button type="submit" className="btn btn-primary mt-2">
@@ -126,8 +115,8 @@ export const AdminForm = ({
         <label className="form-label">Categoría del producto</label>
         <select
           className="form-select"
-          value={categoriaProducto} // Cambiado a categoriaProducto
-          onChange={(e) => setCategoriaProducto(e.target.value)} // Cambiado a setCategoriaProducto
+          value={categoriaProducto}
+          onChange={(e) => setCategoriaProducto(e.target.value)}
         >
           <option value="">Seleccione una categoría</option>
           {categorias.map((cat) => (
@@ -182,7 +171,7 @@ export const AdminForm = ({
         <input
           type="text"
           className="form-control"
-          value={imagenUrl}
+          value={imagen}
           onChange={(e) => setImagenUrl(e.target.value)}
           placeholder="URL de la imagen del producto"
         />

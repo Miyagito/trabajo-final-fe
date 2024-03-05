@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Button } from "../buttons/Button";
 import "./accordionItem.css";
 import { useRecoilState } from "recoil";
@@ -18,10 +18,8 @@ export const AccordionItem = ({
   const handleToggle = () => {
     const content = document.getElementById(`collapse${itemId}`);
     if (isCurrentlyExpanded) {
-      // Colapsar
       content.style.maxHeight = "0";
     } else {
-      // Expandir - Se necesita calcular después de que el navegador tenga la oportunidad de renderizar el cambio
       requestAnimationFrame(() => {
         content.style.maxHeight = content.scrollHeight + "px";
       });
@@ -39,7 +37,7 @@ export const AccordionItem = ({
       };
     });
   };
-
+  console.log(productos);
   return (
     <div className="accordion-item">
       <h2 className="accordion-header" id={`heading${itemId}`}>

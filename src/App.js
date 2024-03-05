@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { useRecoilState } from "recoil";
 import { Header } from "./components/header/Header";
-import mockedData from "./mockedData/mockedData.json";
 import { CategoryAccordion } from "./components/categoryAccordion/CategoryAccordion";
 import { ShoppingCart } from "./components/shoppingCart/ShoppingCart";
 import { AdminForm } from "./components/adminForm/AdminForm";
+import { catAndProdsListAtom } from "./states/catAndProdsListAtom";
 import "./app.css";
 
 function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [shoppyCartList, setShoppyCartList] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [catAndProdsList, setCatAndProdsList] = useState(mockedData);
+  const [catAndProdsList, setCatAndProdsList] =
+    useRecoilState(catAndProdsListAtom);
 
   useEffect(() => {
     const newTotal = shoppyCartList.reduce((sum, product) => {
@@ -56,7 +58,6 @@ function App() {
 
   const addCategoria = (nuevaCategoria) => {
     if (typeof nuevaCategoria === "string") {
-      // Si es una cadena simple, agregamos la categoría sin productos
       setCatAndProdsList((prevState) => ({
         ...prevState,
         categorias: [
@@ -65,7 +66,6 @@ function App() {
         ],
       }));
     } else {
-      // Si es un objeto con productos, simplemente lo agregamos
       setCatAndProdsList((prevState) => ({
         ...prevState,
         categorias: [...prevState.categorias, nuevaCategoria],
@@ -110,6 +110,7 @@ function App() {
           totalPrice={totalPrice}
           takeOffProductToCart={takeOffProductToCart}
           shoppyCartList={shoppyCartList}
+          setShoppyCartList={setShoppyCartList}
         />
       </section>
     </div>
