@@ -37,7 +37,6 @@ export const AccordionItem = ({
       };
     });
   };
-  console.log(productos);
   return (
     <div className="accordion-item">
       <h2 className="accordion-header" id={`heading${itemId}`}>
